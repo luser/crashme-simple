@@ -1,0 +1,16 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul");
+
+@-moz-document url("chrome://browser/content/browser.xul") {
+  #toolbarbutton-crashmesimple {
+    list-style-image: url("chrome://crashmesimple/skin/icon16.png");
+  }
+
+  #toolbarbutton-crashmesimple[cui-areatype="menu-panel"],
+  toolbarpaletteitem[place="palette"] > #toolbarbutton-crashmesimple {
+    list-style-image: url("chrome://crashmesimple/skin/icon.png");
+  }
+
+  #toolbarbutton-crashmesimple-content {
+    list-style-image: url("chrome://browser/skin/tab-crashed.svg");
+  }
+}
