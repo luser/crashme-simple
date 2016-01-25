@@ -5,6 +5,7 @@
 
 const {classes: Cc, interfaces: Ci, utils: Cu} = Components;
 Cu.import("resource://gre/modules/Services.jsm");
+Cu.import("resource://gre/modules/JNI.jsm");
 
 /**
  * Apply a callback to each open and new browser windows.
@@ -120,6 +121,15 @@ function crash() {
   var crash = badptr.contents;
 }
 
+function crashJava() {
+  let jenv = JNI.GetForThread();
+  JNI.LoadClass(jenv, "org.mozilla.gecko.GeckoAppShell", {
+    static_methods: [
+      { name: "doesNotExist", sig: "()I" }
+    ],
+  });
+}
+
 function crash_content() {
   let wm = Cc["@mozilla.org/appshell/window-mediator;1"].
         getService(Ci.nsIWindowMediator);
@@ -139,17 +149,21 @@ function addUI(window) {
   let document = window.document;
   if (Services.appinfo.ID == "{aa3c5121-dab2-40e2-81ca-7ea25febc110}") {
     // Android Fennec
-    menuIDs.set(window,
-                window.NativeWindow.menu.add("Crash me!", null, function() {
+    menuIDs.set(window, [window.NativeWindow.menu.add("Crash me (native)!", null, function() {
                   crash();
-                }));
+                }),
+                window.NativeWindow.menu.add("Crash me (Java)!", null, function() {
+                  crashJava();
+                })]);
   }
 }
 
 function removeUI(window) {
   if (Services.appinfo.ID == "{aa3c5121-dab2-40e2-81ca-7ea25febc110}") {
     if (menuIDs.has(window)) {
-      window.NativeWindow.menu.remove(menuIDs.get(window));
+      menuIDs.get(window).forEach(function(menuId) {
+        window.NativeWindow.menu.remove(menuId);
+      });
       menuIDs.delete(window);
     }
   }
