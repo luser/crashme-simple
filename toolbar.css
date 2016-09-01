@@ -10,7 +10,15 @@
     list-style-image: url("chrome://crashmesimple/skin/icon.png");
   }
 
-  #toolbarbutton-crashmesimple-content {
+  #toolbarbutton-crashmesimple-content > .toolbarbutton-icon,
+  #toolbarbutton-crashmesimple-content-background > .toolbarbutton-icon {
     list-style-image: url("chrome://browser/skin/tab-crashed.svg");
+    min-height: 20px;
+    min-width: 20px;
+  }
+
+  #toolbarbutton-crashmesimple-content-background > .toolbarbutton-icon {
+    filter: url(chrome://browser/skin/filters.svg#fill);
+    fill: currentColor;
   }
 }
