@@ -132,6 +132,24 @@ function crash_content() {
   }
 }
 
+function crash_background_content() {
+  let wm = Cc["@mozilla.org/appshell/window-mediator;1"].
+        getService(Ci.nsIWindowMediator);
+  let win = wm.getMostRecentWindow("navigator:browser");
+  let gBrowser = win.gBrowser;
+  let crashBrowser = gBrowser.selectedBrowser;
+  if (crashBrowser.isRemoteBrowser) {
+    // Currently, about:robots loads in the parent process. If that ever
+    // changes, we should probably do a remoteness flip on the newly
+    // opened tab.
+    gBrowser.loadOneTab("about:robots", { inBackground: false });
+    crashBrowser.messageManager.loadFrameScript("resource://crashmesimple/contentscript.js", true);
+  } else {
+    // Could try harder and force-load an e10s window or something.
+  }
+}
+
+
 let menuIDs = new WeakMap();
 let metroSettingsPanelEntryId;
 
@@ -197,6 +215,16 @@ function startup(data, reason) {
       tooltiptext: "Crash the content process",
       onCommand: function() {
         crash_content();
+      }
+    });
+
+    CustomizableUI.createWidget({
+      id: "toolbarbutton-crashmesimple-content-background",
+      removable: true,
+      label: "Background crash content!",
+      tooltiptext: "Crash the content process in the background",
+      onCommand: function() {
+        crash_background_content();
       }
     });
   }
