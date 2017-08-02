@@ -13,4 +13,8 @@
   #toolbarbutton-crashmesimple-content {
     list-style-image: url("chrome://browser/skin/tab-crashed.svg");
   }
+
+  #toolbarbutton-crashmesimple-rustpanic {
+    list-style-image: url("chrome://browser/skin/iconrust.png");
+  }
 }

@@ -5,6 +5,7 @@ FILES := \
   icon16.png \
   icon64.png \
   icon.png \
+  iconrust.png \
   install.rdf \
   toolbar.css \
   $(NULL)

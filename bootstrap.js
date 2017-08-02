@@ -132,6 +132,10 @@ function crash_content() {
   }
 }
 
+function crash_rust_panic() {
+  Cc["@mozilla.org/xpcom/debug;1"].getService(Ci.nsIDebug2).rustPanic("Crashme!");
+}
+
 let menuIDs = new WeakMap();
 let metroSettingsPanelEntryId;
 
@@ -199,6 +203,16 @@ function startup(data, reason) {
         crash_content();
       }
     });
+
+    CustomizableUI.createWidget({
+      id: "toolbarbutton-crashmesimple-rustpanic",
+      removable: true,
+      label: "Rust panic!",
+      tooltiptext: "Crash with a Rust panic",
+      onCommand: function() {
+        crash_rust_panic();
+      }
+    });
   }
 }
 
@@ -210,6 +224,7 @@ function shutdown(data, reason) {
   if (Services.appinfo.ID == "{ec8030f7-c20a-464f-9b0e-13a3a9e97384}") {
     CustomizableUI.destroyWidget("toolbarbutton-crashmesimple");
     CustomizableUI.destroyWidget("toolbarbutton-crashmesimple-content");
+    CustomizableUI.destroyWidget("toolbarbutton-crashmesimple-rustpanic");
   }
   if (ss && cssuri) {
     if (ss.sheetRegistered(cssuri, ss.USER_SHEET)) {
